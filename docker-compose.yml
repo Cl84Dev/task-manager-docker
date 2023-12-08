@@ -1,0 +1,36 @@
+version: '3'
+services:
+  task-manager-db:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - task-manager-db:/data/db
+    networks:
+      - task-manager
+
+  task-manager-api:
+    build:
+      context: ./task-manager-api
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - task-manager-db
+    networks:
+      - task-manager
+
+  task-manager:
+    build:
+      context: ./task-manager-front-end
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - task-manager
+
+volumes:
+  task-manager-db:
+
+networks:
+  task-manager:
